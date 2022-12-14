@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: couchbase-cluster-ui
+  namespace: couchbase-cluster
+  labels:
+    app.kubernetes.io/component: couchbase-server
+    app.kubernetes.io/name: couchbase-ui
+  annotations:
+    #certmanager.k8s.io/cluster-issuer: "letsencrypt-prod-cluster"
+    kubernetes.io/ingress.class: "nginx"
+    #kubernetes.io/tls-acme: "true"
+spec:
+  rules:
+    - host: hostname.domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: couchbase-cluster-ui
+                port:
+                  number: 8091
