@@ -25,12 +25,12 @@ spec:
         - name: couchbase-cluster
           image: docker.io/couchbase/server:community-7.1.1
           resources:
-             request:
-               memory: "500Mi"
-               cpu: "500m"
-          limits:
-            memory: "1000Mi"
-            cpu: "750m"
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
           ports:
           - name: couchbase-port
             containerPort: 8091
