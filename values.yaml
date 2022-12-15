@@ -14,7 +14,7 @@ image:
 env: {}
 ## env: 
 ## variable1: value1
-## variable12 value2
+## variable2: value2
 
 ## Specify image pull secrets used in the deployment
 imagePullSecrets: []
@@ -66,7 +66,7 @@ Password: ""
 service:
   type: ClusterIP
   port: 8091
-# NodePort: ""
+ # NodePort: ""
   
 ingress:
   enabled: false
@@ -78,7 +78,7 @@ ingress:
     - host: chart-example.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -92,7 +92,7 @@ persistence:
   accessMode: ReadWriteOnce
   ## Couchbase data Persistent Volume size
   size: "8Gi"
-  storageClass: "-"
+  # storageClass: "-"
 
 
 startupProbe: {}
@@ -159,6 +159,3 @@ tolerations: []
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}
-
-
-
