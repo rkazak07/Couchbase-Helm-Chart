@@ -101,7 +101,6 @@ The following table lists the configurable parameters of the Couchbase chart and
 
 
 
-Note: All uncommitted logs will be permanently DELETED when this value is true
 
 [1]: https://www.couchbase.com/
 [2]: https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/ingress/annotation/#actions
