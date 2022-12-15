@@ -1,6 +1,6 @@
 # Couchbase-Kubernetes
 
-This chart provide the [Couchbase][1] deployments.
+This chart provide the Couchbase deployments.
 Note: It is strongly recommend to use on Official Couchbase image to run this chart.
 
 ## Create Namespace
