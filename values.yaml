@@ -11,8 +11,10 @@ image:
   tag: "community-7.1.1"
 
 ## Additional environment variables to be added to couchbase pods
-##
 env: {}
+## env: 
+## variable1: value1
+## variable12 value2
 
 ## Specify image pull secrets used in the deployment
 imagePullSecrets: []
