@@ -44,30 +44,48 @@ spec:
             containerPort: 8092
           - name: couchbase-rest
             containerPort: 8093
+          - name: cb-search
+            containerPort: 8094
+          - name: cb-anlytc
+            containerPort: 8095
           - name: couchbase-event
             containerPort: 8096
+          - name: cb-data-ssl
+            containerPort: 11207
           - name: couchbase-data
             containerPort: 11210
           - name: couchbase-moxi
-            containerPort: 11211
+            containerPort: 11211     
+          - name: cb-port-ssl
+            containerPort: 18091
+          - name: cb-xdcr-ssl
+            containerPort: 18092
+          - name: cb-rest-ssl
+            containerPort: 18093
+          - name: cb-search-ssl
+            containerPort: 18094
+          - name: cb-anlytc-ssl
+            containerPort: 18095
+          - name: cb-event-ssl
+            containerPort: 18096         
           livenessProbe:
             httpGet:
               path: /ui/index.html
-              port: 8091
+              port: {{ .Values.service.port }}
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
             successThreshold: {{ .Values.livenessProbe.successThreshold }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           startupProbe:
-            httpGet:
-              path: /ui/index.html
-              port: 8091
-            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
-            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
-            successThreshold: {{ .Values.startupProbe.successThreshold }}
-            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+#            httpGet:
+#              path: /ui/index.html
+#              port: {{ .Values.service.port }}
+#            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+#            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+#            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+#            successThreshold: {{ .Values.startupProbe.successThreshold }}
+#            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
           volumeMounts:
           - name: couchbase-cluster-pvc
             mountPath: /opt/couchbase/var

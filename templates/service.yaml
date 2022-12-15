@@ -8,23 +8,51 @@ spec:
   type: {{ .Values.service.type }}
   ports:
   - name: couchbase-port
-    port: 8091
-    targetPort: 8091
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.port }}
   - name: couchbase-xdcr
     port: 8092
     targetPort: 8092
   - name: couchbase-rest
     port: 8093
     targetPort: 8093
+  - name: cb-search
+    port: 8094
+    targetPort: 8094
+  - name: cb-anlytc 
+    port: 8095
+    targetPort: 8095
   - name: couchbase-event
     port: 8096
     targetPort: 8096
+  - name: cb-data-ssl
+    port: 11207
+    targetPort: 11207
   - name: couchbase-data
     port: 11210
     targetPort: 11210
   - name: couchbase-moxi
     port: 11211
     targetPort: 11211
-  #clusterIP: None 
+  - name: cb-port-ssl
+    port: 18091
+    targetPort: 18091
+  - name: cb-xdcr-ssl
+    port: 18092
+    targetPort: 18092   
+  - name: cb-rest-ssl
+    port: 18093
+    targetPort: 18093
+  - name: cb-search-ssl
+    port: 18094
+    targetPort: 18094
+  - name: cb-anlytc-ssl
+    port: 18095
+    targetPort: 18095 
+  - name: cb-event-ssl
+    port: 18096
+    targetPort: 18096
+    nodePort:  {{ .Values.service.NodePort }}
+     
   selector:
     {{- include "couchbase-cluster.selectorLabels" . | nindent 4 }}
