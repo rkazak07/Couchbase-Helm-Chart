@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "couchbase-cluster.fullname" . }}
+  labels:
+    {{- include "couchbase-cluster.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "couchbase-cluster.fullname" . }}
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "couchbase-cluster.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "couchbase-cluster.selectorLabels" . | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: {{ default 30 .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "couchbase-cluster.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          ports:
+          - name: couchbase-port
+            containerPort: 8091
+          - name: couchbase-xdcr
+            containerPort: 8092
+          - name: couchbase-rest
+            containerPort: 8093
+          - name: couchbase-event
+            containerPort: 8096
+          - name: couchbase-data
+            containerPort: 11210
+          - name: couchbase-moxi
+            containerPort: 11211
+          livenessProbe:
+            httpGet:
+              path: /ui/index.html
+              port: 8091
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          startupProbe:
+            httpGet:
+              path: /ui/index.html
+              port: 8091
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+          volumeMounts:
+          - name: couchbase-cluster-pvc
+            mountPath: /opt/couchbase/var
+          env:
+          {{- range $key, $value := .Values.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+            {{- end }}
+          - name: CLUSTER_CUSTOM_USERNAME       
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.existingRootSecret | default (include "couchbase-cluster.fullname" .) }}
+                key: username
+          - name: CLUSTER_CUSTOM_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.existingRootSecret | default (include "couchbase-cluster.fullname" .) }}
+                key: password
+  volumeClaimTemplates:
+    - metadata:
+        name: couchbase-cluster-pvc
+      spec:
+        accessModes:
+          - {{ .Values.persistence.accessMode | quote }}
+      {{- if .Values.persistence.storageClass }}         
+        storageClassName: "{{ .Values.persistence.storageClass }}"       
+      {{- end }}         
+        resources:
+          requests:
+            storage: "{{ .Values.persistence.size }}"
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

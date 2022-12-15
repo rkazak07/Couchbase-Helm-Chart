@@ -1,124 +1,183 @@
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: couchbase-cluster
-  namespace: couchbase-cluster
-  labels:
-    app.kubernetes.io/component: couchbase-server
-    app.kubernetes.io/name: couchbase-cluster
-spec:
-  replicas: 3
-  serviceName: couchbase-cluster-svc
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: couchbase-server
-      app.kubernetes.io/name: couchbase-cluster
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/component: couchbase-server
-        app.kubernetes.io/name: couchbase-cluster
-    spec:
-      terminationGracePeriodSeconds: 0
-      containers:
-        - name: couchbase-cluster
-          image: docker.io/couchbase/server:community-7.1.1
-          resources:
-            limits:
-              cpu: 21000m
-              memory: 2Gi
-          ports:
-          - name: couchbase-port
-            containerPort: 8091
-          - name: couchbase-xdcr
-            containerPort: 8092
-          - name: couchbase-rest
-            containerPort: 8093
-          - name: couchbase-event
-            containerPort: 8096
-          - name: couchbase-data
-            containerPort: 11210
-          - name: couchbase-moxi
-            containerPort: 11211
-          volumeMounts:
-          - name: couchbase-cluster-pvc
-            mountPath: /opt/couchbase/var
-          env:
-          - name: COUCHBASE_MASTER
-            value: "couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local"
-          - name: AUTO_REBALANCE
-            value: "true"
-          - name: CLUSTER_CUSTOM_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: couchbase-administrator
-                key: username
-          - name: CLUSTER_CUSTOM_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: couchbase-administrator
-                key: password
-  volumeClaimTemplates:
-    - metadata:
-        name: couchbase-cluster-pvc
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 5Gi
-        storageClassName: "local-path"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: couchbase-cluster-svc
-  namespace: couchbase-cluster
-  labels:
-    app.kubernetes.io/component: couchbase-server
-    app.kubernetes.io/name: couchbase-cluster
-spec:
-  ports:
-  - name: couchbase-port
-    port: 8091
-    targetPort: 8091
-  - name: couchbase-xdcr
-    port: 8092
-    targetPort: 8092
-  - name: couchbase-rest
-    port: 8093
-    targetPort: 8093
-  - name: couchbase-event
-    port: 8096
-    targetPort: 8096
-  - name: couchbase-data
-    port: 11210
-    targetPort: 11210
-  - name: couchbase-moxi
-    port: 11211
-    targetPort: 11211
-  # *.couchbase.default.svc.cluster.local
-  clusterIP: None
-  selector:
-    app.kubernetes.io/component: couchbase-server
-    app.kubernetes.io/name: couchbase-cluster
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: couchbase-cluster-ui
-  namespace: couchbase-cluster
-  labels:
-    app.kubernetes.io/component: couchbase-server
-    app.kubernetes.io/name: couchbase-ui
-spec:
-  ports:
-  - name: couchbase-port
-    port: 8091
-    targetPort: 8091
-  selector:
-    app.kubernetes.io/component: couchbase-server
-    app.kubernetes.io/name: couchbase-cluster
-  sessionAffinity: ClientIP
+# Default values for couchbase-cluster.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 3
+
+image:
+  repository: couchbase/server
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "community-7.1.1"
+
+## Additional environment variables to be added to couchbase pods
+##
+env: {}
+
+## Specify image pull secrets used in the deployment
+imagePullSecrets: []
+## imagePullSecrets:
+##   - name: some-registry
+##   - name: another-registry
+
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  ##
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  ##
+  name: ""
+
+## Couchbase server pod termination grace period
+##
+terminationGracePeriodSeconds: 120
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# couchbase Administrator Username
+##
+Username: "Administrator"
+
+# couchbase Administrator Password
+##
+Password: ""
+
+
+service:
   type: ClusterIP
+#
+##
+  name: couchbase-port
+  port: 8091
+  targetPort: 8091
+  name: couchbase-xdcr
+  port: 8092
+  targetPort: 8092
+  name: couchbase-rest
+  port: 8093
+  targetPort: 8093
+  name: couchbase-event
+  port: 8096
+  targetPort: 8096
+  name: couchbase-data
+  port: 11210
+  targetPort: 11210
+  name: couchbase-moxi
+  port: 11211
+  targetPort: 11211
+
+  
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+persistence:
+  ## 
+  enabled: true
+  ## Must match those of existing PV or dynamic provisioner
+  ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  accessMode: ReadWriteOnce
+  ## Couchbase data Persistent Volume size
+  size: "8Gi"
+  storageClass: "-"
+
+
+
+
+startupProbe:
+  periodSeconds: 60
+  failureThreshold: 3
+  successThreshold: 1
+  timeoutSeconds: 5
+
+
+livenessProbe:
+  initialDelaySeconds: 0
+  periodSeconds: 30
+  failureThreshold: 3
+  successThreshold: 1
+  timeoutSeconds: 5
+
+
+
+# Create specific secret
+##
+existingRootSecret: ""
+
+
+secret:
+    ## Secret annotations
+    ##
+    annotations: {}
+
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+
+## Node labels for node-exporter pod assignment
+## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+##
+nodeSelector: {}
+
+## Node tolerations for node-exporter scheduling to nodes with taints
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+##
+tolerations: []
+  # - key: "key"
+  #   operator: "Equal|Exists"
+  #   value: "value"
+  #   effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
+
+## Pod affinity
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+##
+affinity: {}
+
+
