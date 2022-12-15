@@ -1,5 +1,8 @@
 # Couchbase-Kubernetes
 
+This chart provide the [Couchbase][1] deployments.
+Note: It is strongly recommend to use on Official Couchbase image to run this chart.
+
 ## Create Namespace
 ```bash
 $ kubectl create ns couchbase-cluster
