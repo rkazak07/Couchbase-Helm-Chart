@@ -6,8 +6,6 @@ Note: It is strongly recommend to use on Official Couchbase image to run this ch
 
 ## Quick Installation
 
-This chart requires the following charts before install Couchbase
-
 
 ```bash
 kubectl create namespace couchbase-cluster
