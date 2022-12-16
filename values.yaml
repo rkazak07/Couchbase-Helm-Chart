@@ -8,7 +8,7 @@ image:
   repository: couchbase/server
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "community-7.1.1"
+  tag: "community-7.0.2"
 
 ## Additional environment variables to be added to couchbase pods
 env: {}
