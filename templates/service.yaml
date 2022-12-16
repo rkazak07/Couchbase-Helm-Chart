@@ -52,7 +52,7 @@ spec:
   - name: cb-event-ssl
     port: 18096
     targetPort: 18096
-    NodePort:  {{ .Values.service.NodePort }}
+    nodePort:  {{ .Values.service.nodePort }}
      
   selector:
     {{- include "couchbase-cluster.selectorLabels" . | nindent 4 }}
