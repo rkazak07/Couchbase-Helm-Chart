@@ -66,7 +66,7 @@ Password: ""
 service:
   type: ClusterIP
   port: 8091
- # NodePort: ""
+  # nodePort: ""
   
 ingress:
   enabled: false
