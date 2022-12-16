@@ -24,7 +24,7 @@ version: 0.1.0
 appVersion: "7.1.1"
 
 sources:
-  - https://github.com/rkazak07/Graylog-Kubernetes-Docker
+  - https://github.com/rkazak07/Couchbase-Helm-Chart
 maintainers:
   - name: ramazan KAZAK
     email: ramazankazak_2016@hotmail.com
