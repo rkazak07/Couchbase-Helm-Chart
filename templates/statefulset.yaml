@@ -89,6 +89,8 @@ spec:
           volumeMounts:
           - name: couchbase-cluster-pvc
             mountPath: /opt/couchbase/var
+          - name: couchbase-couchbase-backup
+            mountPath: /opt/couchbase/backup
           env:
           {{- range $key, $value := .Values.env }}
           - name: {{ $key }}
@@ -104,6 +106,10 @@ spec:
               secretKeyRef:
                 name: {{ .Values.existingRootSecret | default (include "couchbase-cluster.fullname" .) }}
                 key: password
+      volumes:
+        - name: couchbase-couchbase-backup
+          persistentVolumeClaim:
+           claimName: couchbase-couchbase-backup
   volumeClaimTemplates:
     - metadata:
         name: couchbase-cluster-pvc
