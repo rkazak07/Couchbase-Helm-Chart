@@ -1,0 +1,18 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: couchbase-cluster
+  name: couchbase-read-role
+rules:
+- apiGroups:
+    - ""
+  resources:
+    - pods
+    - secrets
+    - configmaps
+    - serviceaccounts
+    - namespaces
+  verbs:
+    - get
+    - list
+    - patch
