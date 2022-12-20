@@ -1,7 +1,8 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: nfs-couchbase-backup
+  name: backup-pvc
+  namespace: couchbase-cluster
 spec:
   capacity:
     storage: 10Gi
@@ -11,13 +12,14 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-client
   nfs:
-    path: /data2/nfs_data
+    path: /data
     server: 10.10.33.57
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: nfs-couchbase-backup
+  name: backup-pvc
+  namespace: couchbase-cluster
 spec:
   storageClassName: nfs-client
   accessModes:
