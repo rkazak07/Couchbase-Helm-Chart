@@ -20,13 +20,14 @@ spec:
         app.kubernetes.io/component: couchbase-server
         app.kubernetes.io/name: couchbase-cluster
     spec:
+      serviceAccountName: couchbase-serviceaccount 
       terminationGracePeriodSeconds: 0
       containers:
         - name: couchbase-cluster
           image: docker.io/couchbase/server:community-7.1.1
           resources:
             limits:
-              cpu: 21000m
+              cpu: 100m
               memory: 2Gi
           ports:
           - name: couchbase-port
@@ -44,8 +45,6 @@ spec:
           volumeMounts:
           - name: couchbase-cluster-pvc
             mountPath: /opt/couchbase/var
-          - name: nfs-couchbase-backup
-            mountPath: /opt/couchbase/backup
           env:
           - name: COUCHBASE_MASTER
             value: "couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local"
@@ -61,10 +60,6 @@ spec:
               secretKeyRef:
                 name: couchbase-administrator
                 key: password
-      volumes:
-        - name: nfs-couchbase-backup
-          persistentVolumeClaim:
-           claimName: nfs-couchbase-backup
   volumeClaimTemplates:
     - metadata:
         name: couchbase-cluster-pvc
