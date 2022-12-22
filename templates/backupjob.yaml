@@ -1,0 +1,41 @@
+{{- if .Values.backupjob.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: couchbase-cluster-backup-create
+spec:
+  schedule: {{ .Values.backupjob.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup-script
+            image: couchbase/server:community-7.0.2
+            command: ["sh", "-c" ,"cbbackup http://{{ include "couchbase-cluster.fullname" . }}:{{ .Values.service.port }} /couchbase/backup -u Administrator -p ${PASSWORD} "]
+            volumeMounts:
+            - name: "couchbase-backup"
+              mountPath: "/couchbase/backup"
+          initContainers:
+          - name: setup
+            image: busybox:latest
+            imagePullPolicy: IfNotPresent
+            command:
+               - /bin/sh
+               - -c
+               - |
+                 curl -LO https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl
+                 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+                 chmod +x kubectl
+                 mkdir -p ~/.local/bin
+                 mv ./kubectl ~/.local/bin/kubectl
+                 PASSWORD=`kubectl get {{ template "couchbase-cluster.fullname" . }}-o "jsonpath={.data['password']}" | base64 -d`
+          volumes:
+           - name: couchbase-backup
+             persistentVolumeClaim:
+                claimName: backup-pvc
+          restartPolicy: OnFailure
+
+
+
+
