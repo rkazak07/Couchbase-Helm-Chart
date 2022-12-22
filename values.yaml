@@ -26,6 +26,16 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+rbac:
+  # Specifies whether RBAC resources should be created
+  ##
+  create: true
+
+  resources:
+    - pods
+    - secrets
+
+
 serviceAccount:
   # Specifies whether a service account should be created
   ##
@@ -120,6 +130,15 @@ backup:
   nfs:
     path:
     server: 
+
+# Couchbase Auto Backup Job
+# Must be used with NFS backup disk
+##
+backupjob:
+    enabled: false
+    schedule: "*/5 * * * *"
+
+
 
 startupProbe: {}
 #  periodSeconds: 60
