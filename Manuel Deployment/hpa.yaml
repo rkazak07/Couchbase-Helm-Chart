@@ -1,0 +1,15 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: couchbase-cluster-autoscaling
+  namespace: couchbase-cluster
+spec:
+  maxReplicas: 5
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: couchbase-cluster
+  targetCPUUtilizationPercentage: 50
+
+
