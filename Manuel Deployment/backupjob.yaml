@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: couchbase-cluster-backup-create
+  namespace: couchbase-cluster
 spec:
   schedule: "* * * * *"
   jobTemplate:
