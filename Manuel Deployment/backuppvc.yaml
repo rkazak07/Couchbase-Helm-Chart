@@ -3,6 +3,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: backup-pvc
+  namespace: couchbase-cluster
 spec:
   storageClassName: local-path
   resources:
