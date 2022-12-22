@@ -46,16 +46,16 @@ spec:
           - name: couchbase-cluster-pvc
             mountPath: /opt/couchbase/var
           env:
-          - name: COUCHBASE_MASTER
+          - name: COUCHBASE_HOST
             value: "couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local"
-          - name: AUTO_REBALANCE
+          - name: CLUSTER_REBALANCE
             value: "true"
-          - name: CLUSTER_CUSTOM_USERNAME
+          - name: USERNAME
             valueFrom:
               secretKeyRef:
                 name: couchbase-administrator
                 key: username
-          - name: CLUSTER_CUSTOM_PASSWORD
+          - name: PASSWORD
             valueFrom:
               secretKeyRef:
                 name: couchbase-administrator
