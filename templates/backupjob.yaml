@@ -36,6 +36,6 @@ spec:
                 claimName: backup-pvc
           restartPolicy: OnFailure
 
-
+ {{- end -}}
 
 
