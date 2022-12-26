@@ -12,7 +12,7 @@ spec:
           containers:
           - name: backup-script
             image: couchbase/server:community-7.0.2
-            command: ["sh", "-c" ,"cbbackup http://couchbase-cluster-svc:8091 /couchbase/backup -u Administrator -p 123123 "]   
+            command: ["sh", "-c" ,"cbbackup http://couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local:8091 /couchbase/backup -u Administrator -p 123123 "]   
             volumeMounts:
             - name: "couchbase-backup"
               mountPath: "/couchbase/backup"                    
