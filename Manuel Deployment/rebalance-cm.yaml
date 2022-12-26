@@ -1,0 +1,30 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: couchbase-rebelance
+  namespace: couchbase-cluster
+data:
+  rebalance-node.sh: |+
+    #!/bin/bash
+    couchbase-cli node-init -c couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local -u Administrator -p 123123 --node-init-hostname  couchbase-cluster-0.couchbase-cluster-s$
+    couchbase-cli cluster-init -c couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local \
+    --cluster-username Administrator \
+    --cluster-password 123123 \
+    --services data,index,query,fts \
+    --cluster-ramsize 512 \
+    --cluster-index-ramsize 256 \
+    --cluster-fts-ramsize 256
+    couchbase-cli server-list -c couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local:8091 --username Administrator --password 123123
+    couchbase-cli server-add -c couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local:8091 --username Administrator \
+    --password 123123 --server-add http://couchbase-cluster-1.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local:8091 \
+    --server-add-username Administrator --server-add-password 123123 \
+    --services data,index,query,fts
+    couchbase-cli server-add -c couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local:8091 --username Administrator \
+    --password 123123 --server-add http://couchbase-cluster-2.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local:8091 \
+    --server-add-username Administrator --server-add-password 123123 \
+    --services data,index,query,fts
+    couchbase-cli rebalance -c couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local:8091 -u Administrator -p 123123
+    couchbase-cli server-list -c couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local:8091 --username Administrator --password 123123
+
+
+
