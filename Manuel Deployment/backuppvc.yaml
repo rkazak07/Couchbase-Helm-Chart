@@ -5,7 +5,7 @@ metadata:
   name: backup-pvc
   namespace: couchbase-cluster
 spec:
-  storageClassName: local-path
+  storageClassName: default
   resources:
     requests:
       storage: 5Gi
