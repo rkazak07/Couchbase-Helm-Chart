@@ -1,4 +1,5 @@
-apiVersion: autoscaling/v1
+
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: couchbase-cluster-autoscaling
@@ -10,6 +11,24 @@ spec:
     apiVersion: apps/v1
     kind: StatefulSet
     name: couchbase-cluster
-  targetCPUUtilizationPercentage: 50
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue
+        averageValue: 100Mi
+
+
+
+
+
+
 
 
