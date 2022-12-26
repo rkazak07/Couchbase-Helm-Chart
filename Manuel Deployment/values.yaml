@@ -68,11 +68,6 @@ spec:
 #            - |
 #              ulimit -n 65536
 #              sysctl -w vm.max_map_count=262144
-      volumes:
-        - name: couchbase-rebelance
-          configMap:
-            name: couchbase-rebelance
-            defaultMode: 0777   
   volumeClaimTemplates:
     - metadata:
         name: couchbase-cluster-pvc
