@@ -1,0 +1,27 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: couchbase-rebelance
+  namespace: couchbase-cluster
+data:
+  rebalance-node.sh: |+
+    #!/bin/bash
+    couchbase-cli node-init -c couchbase-cluster-0.couchbase-cluster-svc.{{.Release.Namespace}}.svc.{{ .Values.clusterDomain }} -u Administrator -p {{ .Values.Password | b64enc | quote }} --node-init-hostname  couchbase-cluster-0.couchbase-cluster-s$
+    couchbase-cli cluster-init -c couchbase-cluster-0.couchbase-cluster-svc.{{.Release.Namespace}}.svc.{{ .Values.clusterDomain }} \
+    --cluster-username {{ .Values.Username | b64enc | quote }} \
+    --cluster-password {{ .Values.Password | b64enc | quote }} \
+    --services data,index,query,fts \
+    --cluster-ramsize 512 \
+    --cluster-index-ramsize 256 \
+    --cluster-fts-ramsize 256
+    couchbase-cli server-list -c couchbase-cluster-0.couchbase-cluster-svc.{{.Release.Namespace}}.svc.{{ .Values.clusterDomain }}:8091 --username {{ .Values.Username | b64enc | quote }} --password {{ .Values.Password | b64enc | quote }}
+    couchbase-cli server-add -c couchbase-cluster-0.couchbase-cluster-svc.{{.Release.Namespace}}.svc.{{ .Values.clusterDomain }}:8091 --username {{ .Values.Username | b64enc | quote }} \
+    --password {{ .Values.Password | b64enc | quote }} --server-add http://couchbase-cluster-1.couchbase-cluster-svc.{{.Release.Namespace}}.svc.{{ .Values.clusterDomain }}:8091 \
+    --server-add-username {{ .Values.Username | b64enc | quote }} --server-add-password {{ .Values.Password | b64enc | quote }} \
+    --services data,index,query,fts
+    couchbase-cli server-add -c couchbase-cluster-0.couchbase-cluster-svc.{{.Release.Namespace}}.svc.ithinka.cluster.local:8091 --username {{ .Values.Username | b64enc | quote }} \
+    --password {{ .Values.Password | b64enc | quote }} --server-add http://couchbase-cluster-2.couchbase-cluster-svc.{{.Release.Namespace}}.svc.{{ .Values.clusterDomain }}:8091 \
+    --server-add-username {{ .Values.Username | b64enc | quote }} --server-add-password {{ .Values.Password | b64enc | quote }} \
+    --services data,index,query,fts
+    couchbase-cli rebalance -c couchbase-cluster-0.couchbase-cluster-svc.{{.Release.Namespace}}.svc.{{ .Values.clusterDomain }}:8091 -u {{ .Values.Username | b64enc | quote }} -p {{ .Values.Password | b64enc | quote }}
+    couchbase-cli server-list -c couchbase-cluster-0.couchbase-cluster-svc.{{.Release.Namespace}}.svc.{{ .Values.clusterDomain }}:8091 --username {{ .Values.Username | b64enc | quote }} --password {{ .Values.Password | b64enc | quote }}
