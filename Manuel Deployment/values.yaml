@@ -20,14 +20,14 @@ spec:
         app.kubernetes.io/component: couchbase-server
         app.kubernetes.io/name: couchbase-cluster
     spec:
-      serviceAccountName: couchbase-serviceaccount 
-      terminationGracePeriodSeconds: 0
+      serviceAccountName: couchbase-serviceaccount    
+      terminationGracePeriodSeconds: 30
       containers:
         - name: couchbase-cluster
           image: docker.io/couchbase/server:community-7.0.2
           resources:
             limits:
-              cpu: 100m
+              cpu: 2100m
               memory: 2Gi
           ports:
           - name: couchbase-port
@@ -46,6 +46,8 @@ spec:
           - name: couchbase-cluster-pvc
             mountPath: /opt/couchbase/var
           env:
+          - name: TZ
+            value: Europe/Istanbul
           - name: COUCHBASE_HOST
             value: "couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.ithinka.cluster.local"
           - name: CLUSTER_REBALANCE
@@ -60,6 +62,17 @@ spec:
               secretKeyRef:
                 name: couchbase-administrator
                 key: password
+#          command: 
+#            - /bin/bash
+#            - -c
+#            - |
+#              ulimit -n 65536
+#              sysctl -w vm.max_map_count=262144
+      volumes:
+        - name: couchbase-rebelance
+          configMap:
+            name: couchbase-rebelance
+            defaultMode: 0777   
   volumeClaimTemplates:
     - metadata:
         name: couchbase-cluster-pvc
@@ -123,3 +136,4 @@ spec:
     app.kubernetes.io/name: couchbase-cluster
   sessionAffinity: ClientIP
   type: ClusterIP
+
