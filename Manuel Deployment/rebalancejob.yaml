@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-cluster-job
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 60
+  template:
+    spec:
+      containers:
+      - name: create-cluster
+        image: docker.io/couchbase/server:community-7.0.2
+        command: ["/bin/sh"]
+        args: ["-c", "/scripts/rebalance-node.sh"]
+        volumeMounts:
+        - name: couchbase-rebelance
+          mountPath: /scripts
+      volumes:
+        - name: couchbase-rebelance
+          configMap:
+            name: couchbase-rebelance
+            defaultMode: 0777
+      restartPolicy: Never
+
+
+
+
+
+
