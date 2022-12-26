@@ -25,6 +25,7 @@ imagePullSecrets: []
 
 nameOverride: ""
 fullnameOverride: ""
+clusterDomain: cluster.local
 
 rbac:
   # Specifies whether RBAC resources should be created
