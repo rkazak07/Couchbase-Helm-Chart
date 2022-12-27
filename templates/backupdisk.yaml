@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "couchbase-cluster.fullname" . }}
+  name: {{ include "couchbase-cluster.fullname" . }}-pvc
 spec:
   storageClassName: "{{ .Values.backup.storageClassName }}"
   resources:
