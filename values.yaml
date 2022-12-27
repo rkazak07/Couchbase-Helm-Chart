@@ -16,7 +16,7 @@ env: {}
 ## variable1: value1
 ## variable2: value2
 
-# Couchbase cluster Setup Cluster 
+# Couchbase Automatic intialize Setup  Cluster 
 ##
 Setup:
   enabled: true
