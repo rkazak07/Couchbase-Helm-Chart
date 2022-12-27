@@ -4,7 +4,7 @@ kind: CronJob
 metadata:
   name: couchbase-cluster-backup-create
 spec:
-  schedule: {{ .Values.backupjob.schedule }}
+  schedule: "{{ .Values.backupjob.schedule }}"
   jobTemplate:
     spec:
       template:
