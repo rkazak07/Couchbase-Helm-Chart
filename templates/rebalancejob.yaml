@@ -1,3 +1,4 @@
+{{- if .Values.Setup.enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -26,3 +27,4 @@ spec:
             name: couchbase-rebelance
             defaultMode: 0777
       restartPolicy: Never
+{{- end }}
