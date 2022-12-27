@@ -121,30 +121,20 @@ persistence:
   size: "8Gi"
   # storageClass: "-"
 
-# Couchbase NFS Backup 
+# Couchbase  Backup Parameters
 ##
 backup:
   enabled: true
   accessmode: ReadWriteOnce
-# Total NFS persistence volume Capacity Size
+# Total Backup persistence volume  Size
 #
-  capacity:
-    storage: 10Gi
-# NFS PersistenceVolumeClaim Size
-#
-  Pvc:
-   size: 5Gi
+  size: 5Gi
 # NFS StorageClassName
 ##
   storageClassName: "-"
-# NFS Server Data path and Server
-##
-  nfs:
-    path:
-    server: 
 
 # Couchbase Auto Backup Job
-# Must be used with NFS backup disk
+# Must be used with Backup parameters 
 ##
 backupjob:
     enabled: false
