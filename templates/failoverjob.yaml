@@ -1,10 +1,11 @@
+{{- if .Values.backupjob.enabled -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: failover-cluster-job
   namespace: couchbase-cluster
 spec:
-  schedule: "*/15 * * * *"
+  schedule: "{{ .Values.failover.schedule }}"
   jobTemplate:
     spec:
       template:
@@ -26,3 +27,4 @@ spec:
                 name: failover-cluster
                 defaultMode: 0777
           restartPolicy: Never
+ {{- end -}}
