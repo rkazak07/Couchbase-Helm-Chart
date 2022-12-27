@@ -1,4 +1,4 @@
-{{- if .Values.backupjob.enabled -}}
+{{- if .Values.failover.enabled -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
