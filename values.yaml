@@ -16,6 +16,17 @@ env: {}
 ## variable1: value1
 ## variable2: value2
 
+# Couchbase cluster Setup Cluster 
+##
+Setup:
+  enabled: true
+  services: data,index,query,fts
+  clusterRamSize: 512
+  clusterIndexRmasize: 256
+  clusterFtsRamsize: 256
+  
+
+
 ## Specify image pull secrets used in the deployment
 imagePullSecrets: []
 ## imagePullSecrets:
