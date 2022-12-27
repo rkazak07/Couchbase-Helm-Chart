@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: failover-cluster-job
+  namespace: couchbase-cluster
+spec:
+  schedule: "*/15 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: failover-cluster
+            image: docker.io/couchbase/server:community-7.0.2
+            command: 
+              - /bin/sh
+              - -c
+              - |
+                /scripts/failover-node.sh
+            volumeMounts:
+            - name: failover-cluster
+              mountPath: /scripts
+          volumes:
+            - name: failover-cluster
+              configMap:
+                name: failover-cluster
+                defaultMode: 0777
+          restartPolicy: Never
+

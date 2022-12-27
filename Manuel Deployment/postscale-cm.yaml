@@ -1,0 +1,30 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: autoupdate-cluster-job
+  namespace: couchbase-cluster
+data:
+  autoupdate-node.sh: |+
+    #!/bin/bash
+    replicas=4
+    hostname0=couchbase-cluster-0.couchbase-cluster-svc.couchbase-cluster.svc.kubeceofg.ithinka.local
+    password=123123
+    cs=`couchbase-cli server-list -c $hostname0:8091 --username Administrator --password "$password" | wc -l`
+    if [ $replicas -gt $cs ]
+    then
+    services="data,index,query,fts"
+    cluster_ramsize=512
+    cluster_index_ramsize=256
+    cluster_fts_ramsize=256
+    #add server and rebalance
+    for (( a=1 ; a<=$replicas-1; a++ ));
+    do
+    echo "$hostname0" | sed "s/-0/-${a}/g" > hostx
+    hostx=`cat hostx`
+    couchbase-cli server-add -c $hostname0:8091 --username Administrator \
+    --password $password --server-add $hostx:8091 \
+    --server-add-username Administrator --server-add-password $password \
+    --services $services
+    couchbase-cli rebalance -c $hostname0:8091 -u Administrator -p $password
+    done
+    fi

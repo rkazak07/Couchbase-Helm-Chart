@@ -1,0 +1,14 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: failover-cluster
+  namespace: couchbase-cluster
+data:
+  failover-node.sh: |+
+    #!/bin/bash
+    hostname0=couchbase-cluster-svc
+    password=123123
+    couchbase-cli server-list -c $hostname0:8091 --username Administrator --password "$password" | grep -v " healthy active" | cut -d " " -f1 | cut -d "@" -f2 > hostx
+    hostx=`cat hostx`
+    couchbase-cli recovery -c $hostname0:8091 --username Administrator --password "$password" --server-recovery $hostx:8091 --recovery-type delta
+   couchbase-cli rebalance -c $hostname0:8091 -u Administrator -p "$password"

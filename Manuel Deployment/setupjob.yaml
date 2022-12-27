@@ -11,7 +11,7 @@ spec:
       containers:
       - name: create-cluster
         image: docker.io/couchbase/server:community-7.0.2
-        command:
+        command: 
           - /bin/sh
           - -c
           - |
@@ -26,6 +26,3 @@ spec:
             name: couchbase-rebelance
             defaultMode: 0777
       restartPolicy: Never
-
-
-
