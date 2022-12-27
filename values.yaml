@@ -140,6 +140,17 @@ backupjob:
     enabled: false
     schedule: "*/5 * * * *"
 
+# Couchbase Failover after is rebalance Job
+##
+failover:
+     enabled: false
+     schedule: "*/10 * * * *"
+ 
+# It allows new pods to be added to the cluster automatically after the number of replicas increases.
+##
+postscale:
+     enabled: false
+     schedule: "*/15 * * * *"
 
 
 startupProbe: {}
