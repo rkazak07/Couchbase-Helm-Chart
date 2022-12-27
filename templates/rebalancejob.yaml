@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: create-cluster
-        image: docker.io/couchbase/server:community-7.0.2
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         command:
           - /bin/sh
           - -c
