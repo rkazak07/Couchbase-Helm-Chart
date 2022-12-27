@@ -4,7 +4,7 @@ metadata:
   name: postscale-cluster
   namespace: couchbase-cluster
 data:
-  autoupdate-node.sh: |+
+  postscale-node.sh: |+
     #!/bin/bash
     replicas={{ .Values.replicaCount }}
     hostname0={{ include "couchbase-cluster.fullname" . }}-0.{{ include "couchbase-cluster.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
