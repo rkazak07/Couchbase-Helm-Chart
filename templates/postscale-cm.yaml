@@ -1,3 +1,4 @@
+{{- if .Values.postscale.enabled -}}
 kind: ConfigMap 
 apiVersion: v1 
 metadata:
@@ -28,3 +29,4 @@ data:
     couchbase-cli rebalance -c $hostname0:8091 -u $username -p $password
     done
     fi
+ {{- end -}}
