@@ -8,7 +8,7 @@ data:
     #!/bin/bash
     #dynamic values
     replicas={{ .Values.replicaCount }}
-    hostname0={{ include "couchbase-cluster.fullname" . }}.{{ include "couchbase-cluster.fullname" . }}-svc.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+    hostname0={{ include "couchbase-cluster.fullname" . }}-0.{{ include "couchbase-cluster.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
     password={{ .Values.existingRootSecret | default (include "couchbase-cluster.fullname" .) }}
     services="{{ .Values.Setup.services }}"
     cluster_ramsize={{ .Values.Setup.clusterRamSize }}
