@@ -9,22 +9,23 @@ data:
     #dynamic values
     replicas={{ .Values.replicaCount }}
     hostname0={{ include "couchbase-cluster.fullname" . }}-0.{{ include "couchbase-cluster.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
-    password={{ .Values.existingRootSecret | default (include "couchbase-cluster.fullname" .) }}
+    password={{ .Values.Password }}
+    username={{ .Values.Username }}
     services="{{ .Values.Setup.services }}"
     cluster_ramsize={{ .Values.Setup.clusterRamSize }}
     cluster_index_ramsize={{ .Values.Setup.clusterIndexRmasize }}
     cluster_fts_ramsize={{ .Values.Setup.clusterFtsRamsize }}
-    cs=`couchbase-cli server-list -c $hostname0:8091 --username Administrator --password "$password" | grep " healthy active" | wc -l`
+    cs=`couchbase-cli server-list -c $hostname0:8091 --username $username --password "$password" | grep " healthy active" | wc -l`
 
     if [ $cs -eq 0 ]
     then
     #static first pod name
-    couchbase-cli node-init -c $hostname0 -u Administrator -p $password \
+    couchbase-cli node-init -c $hostname0 -u $username -p $password \
     --node-init-hostname "$hostname0"
 
     #setup init
     couchbase-cli cluster-init -c $hostname0 \
-    --cluster-username Administrator \
+    --cluster-username $username \
     --cluster-password $password \
     --services $services \
     --cluster-ramsize $cluster_ramsize \
@@ -36,11 +37,11 @@ data:
     do
     echo "$hostname0" | sed "s/-0/-${a}/g" > hostx
     hostx=`cat hostx`
-    couchbase-cli server-add -c $hostname0:8091 --username Administrator \
+    couchbase-cli server-add -c $hostname0:8091 --username $username \
     --password $password --server-add $hostx:8091 \
-    --server-add-username Administrator --server-add-password $password \
+    --server-add-username $username --server-add-password $password \
     --services $services
-    couchbase-cli rebalance -c $hostname0:8091 -u Administrator -p $password
+    couchbase-cli rebalance -c $hostname0:8091 -u $username -p $password
     done
     fi
 {{- end }}
