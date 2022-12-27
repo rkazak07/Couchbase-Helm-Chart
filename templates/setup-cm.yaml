@@ -14,7 +14,10 @@ data:
     cluster_ramsize={{ .Values.Setup.clusterRamSize }}
     cluster_index_ramsize={{ .Values.Setup.clusterIndexRmasize }}
     cluster_fts_ramsize={{ .Values.Setup.clusterFtsRamsize }}
+    cs=`couchbase-cli server-list -c $hostname0:8091 --username Administrator --password "$password" | grep " healthy active" | wc -l`
 
+    if [ $cs -eq 0 ]
+    then
     #static first pod name
     couchbase-cli node-init -c $hostname0 -u Administrator -p $password \
     --node-init-hostname "$hostname0"
@@ -35,8 +38,9 @@ data:
     hostx=`cat hostx`
     couchbase-cli server-add -c $hostname0:8091 --username Administrator \
     --password $password --server-add $hostx:8091 \
-     --server-add-username Administrator --server-add-password $password \
+    --server-add-username Administrator --server-add-password $password \
     --services $services
     couchbase-cli rebalance -c $hostname0:8091 -u Administrator -p $password
     done
+    fi
 {{- end }}
