@@ -82,7 +82,7 @@ Username: "Administrator"
 
 # couchbase Administrator Password
 ##
-Password: ""
+Password: "Administrator"
 
 
 service:
