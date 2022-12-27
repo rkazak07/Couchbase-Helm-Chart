@@ -33,7 +33,7 @@ spec:
           volumes:
            - name: couchbase-backup
              persistentVolumeClaim:
-                claimName: backup-pvc
+                claimName: {{ include "couchbase-cluster.fullname" . }}-pvc
           restartPolicy: OnFailure
 
  {{- end -}}
