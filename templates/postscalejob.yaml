@@ -1,10 +1,11 @@
+{{- if .Values.postscale.enabled -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: postscale-cluster-job
   namespace: couchbase-cluster
 spec:
-  schedule: "*/10 * * * *"
+  schedule: "{{ .Values.postscale.schedule }}"
   jobTemplate:
     spec:
       template:
@@ -27,3 +28,4 @@ spec:
                 defaultMode: 0777
           restartPolicy: Never
 
+ {{- end -}}
