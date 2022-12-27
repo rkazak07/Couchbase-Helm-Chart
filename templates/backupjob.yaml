@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: backup-script
-            image: couchbase/server:community-7.0.2
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             command: ["sh", "-c" ,"cbbackup http://{{ include "couchbase-cluster.fullname" . }}:{{ .Values.service.port }} /couchbase/backup -u Administrator -p ${PASSWORD} "]
             volumeMounts:
             - name: "couchbase-backup"
