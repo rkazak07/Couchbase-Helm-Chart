@@ -3,7 +3,6 @@ kind: ConfigMap
 apiVersion: v1 
 metadata:
   name: couchbase-rebelance
-  namespace: couchbase-cluster
 data:
   rebalance-node.sh: |+
     #!/bin/bash
