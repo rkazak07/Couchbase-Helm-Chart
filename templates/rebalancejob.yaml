@@ -3,7 +3,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: create-cluster-job
-  namespace: couchbase-cluster
 spec:
   backoffLimit: 0
   activeDeadlineSeconds: 600
