@@ -104,6 +104,8 @@ spec:
               secretKeyRef:
                 name: {{ .Values.existingRootSecret | default (include "couchbase-cluster.fullname" .) }}
                 key: password
+           - name: TZ
+             value: {{ .Values.location }} 
   volumeClaimTemplates:
     - metadata:
         name: couchbase-cluster-pvc
