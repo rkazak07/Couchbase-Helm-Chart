@@ -1,30 +1,14 @@
 {{- if .Values.backup.enabled -}}
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: backup-pvc
-spec:
-  capacity:
-    storage: {{ .Values.backup.capacity.storage }}
-  volumeMode: Filesystem
-  accessModes:
-    - {{ .Values.backup.accessmode }}
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: "{{ .Values.backup.storageClassName }}"
-  nfs:
-    path: {{ .Values.backup.nfs.path }}
-    server: {{ .Values.backup.nfs.server }}
----
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: backup-pvc
+  name: {{ include "couchbase-cluster.fullname" . }}
 spec:
   storageClassName: "{{ .Values.backup.storageClassName }}"
-  accessModes:
-     - {{ .Values.backup.accessmode }}
   resources:
     requests:
-      storage: {{ .Values.backup.Pvc.size }}
+      storage: {{ .Values.backup.size }}
+  accessModes:
+    - {{ .Values.backup.accessmode }}
 
 {{- end }}
