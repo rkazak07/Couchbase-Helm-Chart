@@ -208,6 +208,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+# Date time Configuration
+location: Europe/Istanbul
 
 ## Node labels for node-exporter pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
