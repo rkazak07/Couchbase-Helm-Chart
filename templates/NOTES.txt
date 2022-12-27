@@ -28,7 +28,7 @@ To connect to your Couchbase  server:
   echo "User: {{ .Values.Username }}"
   echo "Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "couchbase-cluster.fullname" . }}  -o "jsonpath={.data['password']}" | base64 --decode)"
   
-{{- if .Values.setup.enabled }}
 3. Automatic Clsuter Initialize
 Installation takes an average of 300 seconds. Please wait
-{{- end }}
+In this structure, new pods added every 15 minutes will be searched and included in the Cluster, if any.
+
