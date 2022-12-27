@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postscale-cluster-job
+  namespace: couchbase-cluster
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: postscale-cluster
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            command: 
+              - /bin/sh
+              - -c
+              - |
+                /scripts/postscale-node.sh
+            volumeMounts:
+            - name: postscale-cluster
+              mountPath: /scripts
+          volumes:
+            - name: postscale-cluster
+              configMap:
+                name: postscale-cluster
+                defaultMode: 0777
+          restartPolicy: Never
+
